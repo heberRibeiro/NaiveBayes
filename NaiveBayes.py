@@ -49,3 +49,25 @@ visualizador = ConfusionMatrix(GaussianNB())
 visualizador.fit(X_train, y_train)
 visualizador.score(X_test, y_test)
 visualizador.poof
+
+""" Simulando modelo em produção """
+
+# Carregando no dado para previsão
+novoCredito = pd.read_csv('NovoCredit.csv')
+
+# Identificação dos atributos categóricos (tipo 'Object')
+atributosParaEncoderEmProducao = []
+for i in list(novoCredito.columns):
+    if(novoCredito[i].dtype == 'O'):
+        atributosParaEncoderEmProducao.append(i)
+del i
+
+# Encoder dos atributos do tipo 'Object' para usar o modelo      
+labelencoder = LabelEncoder()
+for i in atributosParaEncoderEmProducao:
+    novoCredito[i] = labelencoder.fit_transform(
+            novoCredito[i])
+del i
+
+# Previsão
+naive_bayes.predict(novoCredito)
